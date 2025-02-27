@@ -1,0 +1,230 @@
+<?php
+require 'DBConnect.php';
+include 'header.php';
+if (!(isset($_SESSION['usertype'])) or $usertype != 1) {
+  header("Location:index.php");
+  exit;
+}
+?>
+
+<div class="container-fluid">
+  <div class="w3-container w3-orange">
+    <div class="row">
+      <div class="col-sm-10 w3-center"><h1>Manager Page</h1></div>
+    </div>
+  </div>  
+
+  <!-- FORMS -->
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="w3-container w3-topbar w3-bottombar w3-border-blue">
+        <h2>Add New Subject</h2>
+        <form name="subject" action="subjectAction.php">
+          <div class="form-group">
+            <label>Name:</label>
+            <input class="form-control" placeholder="Enter subject name" 
+                   name="name" required>
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div class="col-sm-4">
+      <div class="w3-container w3-topbar w3-bottombar w3-border-blue">
+        <h2>Add New Publisher</h2>
+        <form name="publisher" action="publisherAction.php">
+          <div class="form-group">
+            <label>Name:</label>
+            <input class="form-control" placeholder="Enter publisher name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Web address:</label>
+            <input class="form-control" placeholder="Enter web address" name="web">
+          </div>
+          <div class="form-group">
+            <label>Phone:</label>
+            <input class="form-control" placeholder="Enter phone number" name="phone">
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div class="col-sm-4">
+      <div class="w3-container w3-topbar w3-bottombar w3-border-blue">
+        <h2>Add New Author</h2>
+        <form name="author" action="authorAction.php">
+          <div class="form-group">
+            <label>First name:</label>
+            <input class="form-control" placeholder="Enter first name" 
+                   name="fname" required>
+          </div>
+          <div class="form-group">
+            <label >Last name:</label>
+            <input class="form-control" placeholder="Enter last name" 
+                   name="lname" required>
+          </div>
+          <div class="form-group">
+            <label >EMail:</label>
+            <input class="form-control" placeholder="Enter email address" name="email">
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="w3-container w3-topbar w3-bottombar w3-border-blue">
+        <h2>Add New Book</h2>
+        <form name="book" action="bookAction.php" method="post">
+          <div class="form-group">
+            <label>Title:</label>
+            <input class="form-control" placeholder="Enter title" 
+                   name="title" required>
+          </div>
+          <div class="form-group">
+            <label>ISBN:</label>
+            <input class="form-control" placeholder="Enter ISBN" 
+                   name="isbn" required>
+          </div>
+          <div class="form-group">
+            <label>Year:</label>
+            <input class="form-control" placeholder="Enter year" 
+                   name="year" required>
+          </div>
+          <div class="form-group">
+            <label>Edition:</label>
+            <input class="form-control" placeholder="Enter edition" name="edition">
+          </div>
+          <div class="form-group">
+            <label>Picture:</label>
+            <input type="file" class="form-control" placeholder="Add Picture" name="pic">
+          </div>
+          <div class="form-group">
+            <label>Price:</label>
+            <input class="form-control" placeholder="Enter price" name="price">
+          </div>
+          <div class="form-group">
+            <label>Quantity:</label>
+            <input class="form-control" placeholder="Enter quantity" name="quantity">
+          </div>
+          <div class="form-group">
+            <label>Today's Date: <?php echo date('m/d/Y') ?></label>
+            <input type="hidden" value="<?php echo date('Y-m-d') ?>" name="date">
+          </div>
+          <div class="form-group">
+            <label>Amazon Review:</label>
+            <textarea name="review"rows="5" cols="60">Amazon Review:</textarea>
+          </div>
+          <div class="form-group">
+            <label>Amazon Rating:</label>
+            <input class="form-control" placeholder="Enter rating" name="rating">
+          </div>
+          <div class="form-group">
+            <label>Staff: <?php echo $_SESSION['name'] ?></label>
+            <input type="hidden" value="<?php echo $_SESSION['userID'] ?>" name="staff">
+          </div>
+          <div class="form-group">
+            <label>Select publisher:</label>
+            <select class="w3-select" name="pubID" required>
+              <option value="" disabled selected>Choose your option</option>
+              <?php
+              $sql = "select pubID, name from publishers order by name";
+              $result = queryDB($sql);
+              if (gettype($result) == "object") {
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['pubID'] . "'>" .
+                    $row['name'] . "</option>";
+                  }
+                }
+              }
+              ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Select subject:</label>
+            <select class="w3-select" name="subID" required>
+              <option value="" disabled selected>Choose your option</option>
+              <?php
+              $sql2 = "select subID, name from subjects order by name";
+              $result = queryDB($sql2);
+              if (gettype($result) == "object") {
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['subID'] . "'>" .
+                    $row['name'] . "</option>";
+                  }
+                }
+              }
+              ?>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div class="col-sm-4">
+      <div class="w3-container w3-topbar w3-bottombar w3-border-blue">
+        <h2>Book Author Pairing</h2>
+        <form name="bookAuthor" action="bookAuthorAction.php">
+          <div class="form-group">
+            <label>Select book:</label>
+            <select class="w3-select" name="bookID" required>
+              <option value="" disabled selected>Choose your option</option>
+              <?php
+              $sql3 = "select bookID, title from books order by title";
+              $result = queryDB($sql3);
+              if (gettype($result) == "object") {
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['bookID'] . "'>" .
+                    $row['title'] . "</option>";
+                  }
+                }
+              }
+              ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Select author:</label>
+            <select class="w3-select" name="authorID" required>
+              <option value="" disabled selected>Choose your option</option>
+              <?php
+              $sql4 = "select authorID, firstname, lastname from authors order by firstname";
+              $result = queryDB($sql4);
+              if (gettype($result) == "object") {
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['authorID'] . "'>" .
+                    $row['firstname'] . " " . $row['lastname'] . "</option>";
+                  }
+                }
+              }
+              ?>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="w3-container w3-topbar w3-bottombar w3-border-blue">
+    <h2>SQL Query Statement</h2>
+    <form name="query" action="queryAction.php">
+      <div class="form-group">
+        <label>Query statement:</label>
+        <input class="form-control" placeholder="Type your sql statement to test" 
+               name="query" required>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
